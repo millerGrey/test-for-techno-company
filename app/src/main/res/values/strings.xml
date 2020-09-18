@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TestTechno</string>
+    <string name="scan">Scan</string>
+    <string name="validate">Validate</string>
+    <string name="scan_it">Please scan QR code.</string>
+    <string name="scan_fail">Scan failed. Try again.</string>
+    <string name="no_url">Scan succeeded. There are not URL. Try again.</string>
+    <string name="network_fail">Network is not available. Check your connection.</string>
+    <string name="https_not_supported">https not supported</string>
+    <string name="valid">valid</string>
+    <string name="invalid">invalid</string>
+</resources>
