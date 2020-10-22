@@ -45,6 +45,12 @@ public class MainVM extends ViewModel {
         event.setValue(SCAN_EVENT);
         chains = new MutableLiveData<>(new ArrayList<>());
         urls = new ArrayList<>();
+        if (BuildConfig.FLAVOR.equals("emulator")) {
+            parseURLs("https://yandex.ru\n" +
+                    "Visit dubai.com! We'are here!\n" +
+                    "https://vbankcenter.ru/ https://mail.yahoo.com/d/folders/1/messages/AKZ5BooBZVroX2CYhwBpeHfIKRI?reason=invalid_cred https://track.toggl.com/projects/3996957/list выадлыашозуцз а94шкльа https://ya.ru/ QR sample payloads:\n" +
+                    "Our sites: http://site1.ru, http://site2.ru/cgi/users. Also check this https://one.site3.org?id=23");
+        }
         isValidationOver = false;
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TestTechno</string>
+    <string name="app_name">SSL checker</string>
     <string name="scan">Scan</string>
     <string name="validate">Validate</string>
     <string name="scan_it">Please scan QR code.</string>
@@ -9,4 +9,5 @@
     <string name="https_not_supported">https not supported</string>
     <string name="valid">valid</string>
     <string name="invalid">invalid</string>
+    <string name="certificates">Certificates:</string>
 </resources>

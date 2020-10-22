@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 public class MainFragment extends Fragment {
 
@@ -34,10 +35,10 @@ public class MainFragment extends Fragment {
         mainVM.validateBtnState.observe(this, state -> {
             if (state) {
                 mAdapter.update();
-                validateBut.setEnabled(true);
+//                validateBut.setEnabled(true);
                 mEmptyList.setVisibility(View.GONE);
             } else {
-                validateBut.setEnabled(false);
+//                validateBut.setEnabled(false);
             }
         });
         mainVM.progress.observe(this, progress -> {
@@ -57,21 +58,22 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         mRecyclerView = v.findViewById(R.id.recycler);
-        mAdapter = new URLadapter(mainVM, getResources());
+        mAdapter = new URLadapter(mainVM);
         mRecyclerView.setAdapter(mAdapter);
         LinearLayoutManager lm = new LinearLayoutManager(requireActivity());
         mRecyclerView.setLayoutManager(lm);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), lm.getOrientation()));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), lm.getOrientation()));
+        mRecyclerView.setItemAnimator(null);
         mProgress = v.findViewById(R.id.progressBar);
         mEmptyList = v.findViewById(R.id.emptyList);
-        scanBut = (Button) v.findViewById(R.id.button_scan);
-        scanBut.setOnClickListener(x -> {
-            mainVM.buttonScanListener();
-        });
-        validateBut = (Button) v.findViewById(R.id.button_validate);
-        validateBut.setOnClickListener(x -> {
-            mainVM.buttonValidateListener();
-        });
+//        scanBut = (Button) v.findViewById(R.id.button_scan);
+//        scanBut.setOnClickListener(x -> {
+//            mainVM.buttonScanListener();
+//        });
+//        validateBut = (Button) v.findViewById(R.id.button_validate);
+//        validateBut.setOnClickListener(x -> {
+//            mainVM.buttonValidateListener();
+//        });
         return v;
     }
 }

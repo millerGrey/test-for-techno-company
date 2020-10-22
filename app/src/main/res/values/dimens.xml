@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_image_margin">16dp</dimen>
+    <dimen name="list_item_arrow_image_width">24dp</dimen>
+    <dimen name="list_item_is_valid_image_width">24dp</dimen>
+</resources>

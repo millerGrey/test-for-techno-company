@@ -96,11 +96,6 @@ public class LoadCertService extends IntentService {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private void loadURLcerts(String url) {
         List<X509Certificate> certificates = new ArrayList<>();
         ChainData chainData = new ChainData(url);

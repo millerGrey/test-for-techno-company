@@ -3,8 +3,12 @@ package grey.techno.test;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainVM = new ViewModelProvider(this).get(MainVM.class);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MainFragment(), "main").commit();
-        IntentIntegrator in = new IntentIntegrator(this);
+        setSupportActionBar(findViewById(R.id.app_bar));
+        invalidateOptionsMenu();
         mainVM.event.observe(this, value -> {
             if (isFirstValue) {
                 isFirstValue = false;
@@ -44,20 +49,43 @@ public class MainActivity extends AppCompatActivity {
             if (value.equals(MainVM.NO_URL_EVENT)) {
                 makeToast(getResources().getString(R.string.no_url));
             } else if (value.equals(MainVM.SCAN_EVENT)) {
-                in.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-                in.setBeepEnabled(false);
-                in.setPrompt("");
-                in.setBarcodeImageEnabled(true);
-                in.setOrientationLocked(false);
-                in.initiateScan();
+//                startScan();
             } else if (value.equals(MainVM.VALIDATE_EVENT)) {
-                PendingIntent pi = createPendingResult(CODE_LOADER_REQUEST, new Intent(), 0);
-                Intent intent = new Intent(this, LoadCertService.class);
-                intent.putStringArrayListExtra(URL_LIST, (ArrayList<String>) mainVM.urls);
-                intent.putExtra(PENDING_INTENT, pi);
-                startService(intent);
+//                startValidationService();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (BuildConfig.FLAVOR.equals("device")) {
+            menu.getItem(1).setVisible(mainVM.validateBtnState.getValue());
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.scan) {
+            mainVM.buttonScanListener();
+            if (BuildConfig.FLAVOR.equals("device")) {
+                startScan();
+            }
+            return true;
+        } else if(id == R.id.validate){
+            mainVM.buttonValidateListener();
+            startValidationService();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -75,16 +103,42 @@ public class MainActivity extends AppCompatActivity {
             }
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null && result.getContents() != null) {
-                mainVM.parseURLs(result.getContents());
+                if (BuildConfig.FLAVOR.equals("device")) {
+                    mainVM.parseURLs(result.getContents());
+                }
             } else {
                 makeToast(getResources().getString(R.string.scan_fail));
             }
         }
     }
 
+    @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
+    }
+
     void makeToast(String str) {
         Toast toast = Toast.makeText(this, str, Toast.LENGTH_SHORT);
         toast.setGravity(BOTTOM, 0, 300);
         toast.show();
+    }
+
+    void startValidationService() {
+        PendingIntent pi = createPendingResult(CODE_LOADER_REQUEST, new Intent(), 0);
+        Intent intent = new Intent(this, LoadCertService.class);
+        intent.putStringArrayListExtra(URL_LIST, (ArrayList<String>) mainVM.urls);
+        intent.putExtra(PENDING_INTENT, pi);
+        startService(intent);
+    }
+
+    void startScan(){
+        IntentIntegrator in = new IntentIntegrator(this);
+        in.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        in.setBeepEnabled(false);
+        in.setPrompt("");
+        in.setBarcodeImageEnabled(true);
+        in.setOrientationLocked(false);
+        in.initiateScan();
     }
 }
